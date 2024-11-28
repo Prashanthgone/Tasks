@@ -1,0 +1,31 @@
+pipeline {
+    agent none
+    stages {
+        stage('Parallel Builds') {
+            parallel {
+                stage('Build 1') {
+                    agent { label 'docker-agent' }
+                    steps {
+                        sh 'mkdir -p build1 && echo "File from Build 1" > build1/build1.txt'
+                    }
+                    post {
+                        always {
+                            archiveArtifacts artifacts: 'build1/build1.txt', fingerprint: true
+                        }
+                    }
+                }
+                stage('Build 2') {
+                    agent { label 'docker-agent' }
+                    steps {
+                        sh 'mkdir -p build2 && echo "File from Build 2" > build2/build2.txt'
+                    }
+                    post {
+                        always {
+                            archiveArtifacts artifacts: 'build2/build2.txt', fingerprint: true
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
