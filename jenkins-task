@@ -1,3 +1,5 @@
+//pipeline script
+
 pipeline {
     agent none
     stages {
