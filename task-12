@@ -1,0 +1,24 @@
+// Configure gRPC and Implement Load Balancing for Docker Containers Using NGINX
+
+worker_processes auto;
+events {
+    worker_connections 1024;
+}
+
+http {
+    upstream grpc_backends {
+        server 13.201.21.10:80;
+        server 13.201.21.10:80;
+    }
+    server {
+        listen 80 http2;
+        server_name localhost;
+
+        location / {
+            grpc_pass grpc://grpc_backends;
+            grpc_connect_timeout 10s;
+            grpc_send_timeout 30s;
+            grpc_read_timeout 30s;
+        }
+    }
+}
