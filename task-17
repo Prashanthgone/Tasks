@@ -1,0 +1,33 @@
+
+// custom dockerfile with multiple build stages to run a nuxt application in a container.
+
+FROM node:16 AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+FROM node:16-alpine AS runner
+WORKDIR /app
+COPY package*.json ./
+RUN npm install --production
+COPY --from=builder /app/.output ./.output
+EXPOSE 3000
+CMD ["node", ".output/server/index.mjs"]
+
+***************************************************************************************************************************************************************
+
+// custom dockerfile with multiple build stages to run a nodejs application in a container.
+
+FROM node:16 AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+FROM node:16-alpine AS runner
+WORKDIR /app
+COPY package*.json ./
+RUN npm install --production
+COPY --from=builder /app .
+EXPOSE 4000
+CMD ["npm", "start"]
