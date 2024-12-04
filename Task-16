@@ -1,0 +1,26 @@
+// SubTask 1 :  Set resource limits (memory, CPU) in the Docker run command.
+
+docker command for memory limit :  docker run -d -p 90:80 -m 256m prashanth946/nginx-image
+
+docker command for Cpu limit : docker run -d -p 200:80 --cpus 2.0  prashanth946/nginx-image
+
+*****************************************************************************************************************************************
+
+// SubTask 2 : Investigate and apply security best practices, such as running containers as non-root users, using minimal base images, and scanning for vulnerabilities.
+
+// sample docker file 
+
+FROM tomcat:9.0-jdk11-openjdk
+COPY target/. /usr/local/tomcat/webapps/
+EXPOSE 8080
+CMD ["catalina.sh", "run"]
+
+
+// dockerfile with  non-root users, using minimal base image
+
+FROM tomcat:9.0.80-jdk11-temurin
+RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
+USER appuser
+COPY target/. /usr/local/tomcat/webapps/
+EXPOSE 8080
+CMD ["catalina.sh", "run"]
